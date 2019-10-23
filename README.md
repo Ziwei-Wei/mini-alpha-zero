@@ -2,7 +2,7 @@
 experiment on replicating Alpha Go Zero with MCTS + RL + CNN\
 
 under construction...\
-TODO:\
+TODO:
 1. build basic go game in terminal
 2. build MCTS and RL
 3. use pytorch to build CNNs 
