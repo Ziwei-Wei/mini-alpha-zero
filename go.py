@@ -35,6 +35,13 @@ class Group:
     def get_liberty(self):
         return len(self.liberty_positions)*self.color
 
+    def update_liberty(self):
+        self.liberty_positions = set()
+        for member in self.member_positions:
+            for position in self.board.neighbors[member]:
+                if self.board.is_empty(position[0], position[1]):
+                    self.liberty_positions.add(position)
+
     def contains(self, x: int, y: int):
         return (x, y) in self.member_positions
 
@@ -94,6 +101,14 @@ class Board:
             return False
         else:
             return self.__is_EMPTY_free(x, y, color)
+
+    def is_empty(self, x: int, y: int):
+        return self.board[x, y] == EMPTY
+
+    def update_groups_liberty(self):
+        for group in self.groups:
+            group.update_liberty()
+        pass
 
     def update_free_map(self, color: int):
         liberty_positions = set()
@@ -164,7 +179,6 @@ class Game:
     # new move will adjust the free_map
     def __move(self, x: int, y: int, color: int):
         if self.board.is_free(x, y, color):
-
             # create a new group
             new_group = Group(color, self.board)
             new_group.add_member(x, y)
@@ -174,12 +188,14 @@ class Game:
             same_color_groups = set(new_group)
 
             # update liberty for neighbor groups with different color, delete 0 liberty groups
-            exist_kill = False
+            killed = False
             for group in neighbor_groups:
                 if group.color == -color:
                     group.liberty_positions.remove((x, y))
                     if len(group.liberty_positions) == 0:
-                        exist_kill = True
+                        killed = True
+                        if len(group.member_positions) == 1:
+                            self.board.co[color].append((x, y))
                         del group
                 elif group.color == color:
                     same_color_groups.add(group)
@@ -190,8 +206,8 @@ class Game:
             self.board.merge_groups(same_color_groups, color)
 
             # if there is kill then update all groups liberty board
-            if exist_kill == True:
-                pass
+            if killed == True:
+                self.board.update_groups_liberty()
 
             # update free map with
             self.board.update_free_map(-color)
