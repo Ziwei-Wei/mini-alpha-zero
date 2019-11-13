@@ -27,9 +27,6 @@ class Group:
             print_board[position[0], position[1]] = -1
         print(print_board)
 
-    def count(self):
-        return len(self.member_positions)
-
     def is_member(self, x: int, y: int):
         return (x, y) in self.member_positions
 
@@ -98,6 +95,7 @@ class Board:
 
         # core data structure
         self.free_map = {(i, j): True for i in range(x) for j in range(y)}
+
         self.board = np.zeros([x, y], dtype=np.int8)
 
         # for reference
@@ -296,51 +294,6 @@ class Board:
     <- utilities ->
     '''
 
-    def get_score(self):
-        black_score = 0
-        white_score = 0
-        for position, color in numpy.ndenumerate(self.board):
-            if color == BLACK:
-                black_score += 1
-            elif color == WHITE:
-                white_score += 1
-            else:
-                state = self.__find_connections(position)
-                if state == BLACK:
-                    black_score += 1
-                elif color == WHITE:
-                    white_score += 1
-                else:
-                    black_score += 0.5
-                    white_score += 0.5
-
-        return {BLACK: black_score, WHITE: white_score}
-
-    def __find_connections(self, position: tuple):
-        # do bfs
-        black_num = 0
-        white_num = 0
-        queue = []
-        queue.append(position)
-        while len(queue) > 0:
-            curr_position = queue.pop(0)
-            if self.board[curr_position[0], curr_position[1]] == BLACK:
-                black_num += 1
-            elif self.board[curr_position[0], curr_position[1]] == WHITE:
-                white_num += 1
-            else:
-                neighbors = self.neighbors[position]
-                for neighbor in neighbors:
-                    queue.append(neighbor)
-            if black_num > 0 and white_num > 0:
-                return EMPTY
-        if black_num > 0 and white_num == 0:
-            return BLACK
-        elif white_num > 0 and black_num == 0:
-            return WHITE
-        else:
-            raise ValueError("impossible")
-
     def __get_liberty(self, x: int, y: int):
         neighbors_count = self.count_neighbors(x, y)
         return 4 - neighbors_count["total"]
@@ -372,115 +325,3 @@ class Board:
             return False
         else:
             return True
-
-
-class Game:
-    def __init__(self, x: int, y: int):
-        self.board = Board(x, y)
-        self.next_move = BLACK
-        self.komi = round(0.014*x*y, 1) + 0.5
-
-    # new move will adjust the free_map
-    def __move(self, x: int, y: int, color: int):
-        if self.board.is_free(x, y, color):
-            # create a new group
-            self.board.add_stone(x, y, color)
-            new_group = Group(self.board, color)
-            new_group.add_member(x, y)
-
-            # find neighbor groups
-            neighbor_groups = self.board.get_neighbors_groups(x, y)
-            same_color_groups = set([new_group])
-
-            # update liberty for neighbor groups with different color, delete 0 liberty groups
-            killed = False
-            for group in neighbor_groups:
-                if group.color == -color:
-                    group.liberty_positions.remove((x, y))
-                    if len(group.liberty_positions) == 0:
-                        killed = True
-                        if len(group.member_positions) == 1:
-                            self.board.ko[color].add((x, y))
-                        group.remove_self()
-                        del group
-                elif group.color == color:
-                    same_color_groups.add(group)
-                else:
-                    raise ValueError("wrong color")
-
-            # merge same groups
-            self.board.merge_groups(same_color_groups, color)
-
-            # if there is kill then update all groups liberty board
-            if killed == True:
-                self.board.update_groups_liberty()
-
-            # update free map with
-            self.board.update_free_map(color)
-            return True
-        else:
-            return False
-
-    def __calculate_final_score(self):
-        return self.board.get_score()
-
-    def move(self, x: int, y: int):
-        if self.__move(x, y, self.next_move) == True:
-            self.next_move *= -1
-            return True
-        return False
-
-    def is_movable(self):
-        return self.board.count_free() > 0
-
-    def print(self, free_map=False, ko=False, group_map=False):
-        self.board.print(free_map, ko, group_map)
-
-    def start(self, print_process=False):
-        pass_count = 0
-        free_map = False
-        ko = False
-        group_map = False
-        if print_process == True:
-            free_map = True
-            ko = True
-            group_map = True
-        while pass_count < 2:
-            print("----------------------------------------------")
-            self.print(free_map, ko, group_map)
-            next_color = ""
-
-            if self.next_move == BLACK:
-                next_color = "black"
-            elif self.next_move == WHITE:
-                next_color = "white"
-            else:
-                raise ValueError("wrong color")
-
-            if self.is_movable() == True:
-                pass_count = 0
-                print("{} will move next...".format(next_color))
-                print("enter x and y for next move in {}:".format(next_color))
-                x = int(input("x = "))
-                y = int(input("y = "))
-                while self.move(x, y) == False:
-                    print("invalid position!!! please re-enter.")
-                    print("re-enter x and y for next move in {}:".format(next_color))
-                    x = int(input("x = "))
-                    y = int(input("y = "))
-            else:
-                pass_count += 1
-                self.print("{} can only pass...".format(next_color))
-
-            self.board.unset_ko(self.next_move)
-
-        # calculate score
-        (black_score, white_score) = self.__calculate_final_score()
-        print("black: {}".format(black_score))
-        print("white: {}".format(white_score))
-        input("Press Enter to continue...")
-
-
-if __name__ == "__main__":
-    go_game = Game(4, 4)
-    go_game.start(True)
