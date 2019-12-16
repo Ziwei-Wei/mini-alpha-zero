@@ -2,3 +2,4 @@
 __pycache
 .ipynb_checkpoints
 ./backup
+./__pycache__
