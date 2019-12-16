@@ -30,7 +30,7 @@ To test all sizes on baseline model run:
 py ./test.py 
 ```
 
+to change params go to specific files
+
 # to produce graphs of trained data
-Find jupiter notebook file plot.ipynb
-use functions in there to convert .csv files
-to charts.
+Find jupiter notebook file plot.ipynb use functions in there to convert .csv files to charts. Note you may need to uncomment some functions.
