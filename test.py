@@ -72,20 +72,20 @@ if __name__ == "__main__":
 
     perf_and_win_rate = {}
 
-    perf_and_win_rate["4x4 mcts"] = test_MCTS(4, 20)
-    perf_and_win_rate["4x4 nnet"] = test_MCTS_with_NNet(4, 20)
+    perf_and_win_rate["4x4 mcts"] = test_MCTS(4)
+    perf_and_win_rate["4x4 nnet"] = test_MCTS_with_NNet(4)
 
-    perf_and_win_rate["5x5 mcts"] = test_MCTS(5, 20)
-    perf_and_win_rate["5x5 nnet"] = test_MCTS_with_NNet(5, 20)
+    perf_and_win_rate["5x5 mcts"] = test_MCTS(5)
+    perf_and_win_rate["5x5 nnet"] = test_MCTS_with_NNet(5)
 
-    perf_and_win_rate["6x6 mcts"] = test_MCTS(6, 20)
-    perf_and_win_rate["6x6 nnet"] = test_MCTS_with_NNet(6, 20)
+    perf_and_win_rate["6x6 mcts"] = test_MCTS(6)
+    perf_and_win_rate["6x6 nnet"] = test_MCTS_with_NNet(6)
 
-    perf_and_win_rate["7x7 mcts"] = test_MCTS(7, 20)
-    perf_and_win_rate["7x7 nnet"] = test_MCTS_with_NNet(7, 20)
+    perf_and_win_rate["7x7 mcts"] = test_MCTS(7)
+    perf_and_win_rate["7x7 nnet"] = test_MCTS_with_NNet(7)
 
-    perf_and_win_rate["8x8 mcts"] = test_MCTS(8, 20)
-    perf_and_win_rate["8x8 nnet"] = test_MCTS_with_NNet(8, 20)
+    perf_and_win_rate["8x8 mcts"] = test_MCTS(8)
+    perf_and_win_rate["8x8 nnet"] = test_MCTS_with_NNet(8)
 
     df = pd.DataFrame.from_dict(
         perf_and_win_rate, orient='index').reset_index()

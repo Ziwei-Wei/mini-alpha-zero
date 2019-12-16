@@ -171,7 +171,7 @@ class RandomPlayer():
 
 # adjust params here
 args = dotdict({
-    'iter_num': 10,
+    'iter_num': 100,
     'self_play_num': 32,
     'tree_search_count': 32,
     'cpuct': 1,
