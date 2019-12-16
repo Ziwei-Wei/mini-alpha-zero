@@ -15,7 +15,7 @@ all model data is saved at ./models
 all plot data is saved at ./plots
 
 # to run the project
-To test go game run:
+To test go game run: (note ko is not implemented in this level can lead to infinite loop)
 ```console
 py ./game_test.py
 
