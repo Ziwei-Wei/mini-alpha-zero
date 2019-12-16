@@ -1,8 +1,30 @@
 {
     "cSpell.words": [
+        "MCST",
+        "MCTS",
+        "Pickler",
+        "Unpickler",
+        "astype",
+        "conv",
+        "cpuct",
+        "cuda",
         "curr",
+        "deque",
         "dtype",
+        "fliplr",
+        "ndarray",
         "ndenumerate",
-        "nditer"
-    ]
+        "nditer",
+        "nmcts",
+        "nnet",
+        "optim",
+        "pmcts",
+        "pnet",
+        "probs",
+        "pytorch",
+        "relu",
+        "strftime",
+        "tolist"
+    ],
+    "python.pythonPath": "C:\\Users\\R2D404\\Anaconda3\\python.exe"
 }

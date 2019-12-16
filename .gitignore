@@ -1,2 +1,4 @@
 .vscode
 __pycache
+.ipynb_checkpoints
+./backup
