@@ -12,6 +12,7 @@
         "deque",
         "dtype",
         "fliplr",
+        "ipynb",
         "ndarray",
         "ndenumerate",
         "nditer",
